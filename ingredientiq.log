@@ -1,0 +1,456 @@
+2026-03-20 15:31:08,046 - src.api.main - INFO - Initializing models...
+2026-03-20 15:31:08,047 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 15:31:08,049 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 15:31:08,049 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 15:31:08,050 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 15:31:23,224 - src.api.main - INFO - GET /docs
+2026-03-20 15:31:23,226 - src.api.main - INFO - Response status: 200
+2026-03-20 15:31:24,320 - src.api.main - INFO - GET /openapi.json
+2026-03-20 15:31:24,578 - src.api.main - INFO - Response status: 200
+2026-03-20 15:55:04,313 - src.api.main - INFO - GET /health
+2026-03-20 15:55:04,335 - src.api.main - INFO - Response status: 200
+2026-03-20 15:55:04,373 - src.api.main - INFO - GET /health
+2026-03-20 15:55:04,386 - src.api.main - INFO - Response status: 200
+2026-03-20 15:56:45,117 - src.api.main - INFO - OPTIONS /scan/barcode
+2026-03-20 15:56:45,117 - src.api.main - INFO - Response status: 200
+2026-03-20 15:56:45,120 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 15:56:45,126 - src.api.main - INFO - Fetching product for barcode: 3600523021451
+2026-03-20 15:56:45,127 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 3600523021451
+2026-03-20 15:56:47,889 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 3600523021451
+2026-03-20 15:56:53,645 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 3600523021451
+2026-03-20 15:56:53,646 - src.api.main - WARNING - Product not found for barcode: 3600523021451
+2026-03-20 15:56:53,647 - src.api.main - INFO - Response status: 404
+2026-03-20 15:57:06,501 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 15:57:06,504 - src.api.main - INFO - Fetching product for barcode: 8901030859756
+2026-03-20 15:57:06,505 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 8901030859756
+2026-03-20 15:57:08,316 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 8901030859756
+2026-03-20 15:57:12,444 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 8901030859756
+2026-03-20 15:57:12,444 - src.api.main - WARNING - Product not found for barcode: 8901030859756
+2026-03-20 15:57:12,445 - src.api.main - INFO - Response status: 404
+2026-03-20 15:57:38,844 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 15:57:38,850 - src.api.main - INFO - Fetching product for barcode: 5449000000996
+2026-03-20 15:57:38,850 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000000996
+2026-03-20 15:57:41,274 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000000996
+2026-03-20 15:57:53,295 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:57:53,296 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:57:53,297 - src.api.main - INFO - Response status: 500
+2026-03-20 15:57:55,869 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 15:57:55,872 - src.api.main - INFO - Fetching product for barcode: 5449000000996
+2026-03-20 15:57:55,872 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000000996
+2026-03-20 15:57:58,343 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000000996
+2026-03-20 15:58:09,850 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:58:09,851 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:58:09,852 - src.api.main - INFO - Response status: 500
+2026-03-20 15:58:15,113 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 15:58:15,116 - src.api.main - INFO - Fetching product for barcode: 3017620422003
+2026-03-20 15:58:15,119 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 3017620422003
+2026-03-20 15:58:17,996 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 3017620422003
+2026-03-20 15:58:29,516 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:58:29,517 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:58:29,519 - src.api.main - INFO - Response status: 500
+2026-03-20 15:58:50,444 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 15:58:50,447 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 15:58:50,448 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 15:58:52,024 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 15:59:03,408 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:59:03,413 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 15:59:03,416 - src.api.main - INFO - Response status: 500
+2026-03-20 15:59:25,107 - src.api.main - INFO - GET /health
+2026-03-20 15:59:25,108 - src.api.main - INFO - Response status: 200
+2026-03-20 16:01:16,463 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:01:16,465 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:01:16,465 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:01:19,477 - src.ingestion.barcode_fetcher - WARNING - OpenBeautyFacts API error: Request failed: HTTPSConnectionPool(host='world.openbeautyfacts.org', port=443): Max retries exceeded with url: /api/v2/product/0011111038137 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)'))), trying OpenFoodFacts
+2026-03-20 16:01:19,477 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:01:22,373 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Max retries exceeded with url: /api/v2/product/0011111038137 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))
+2026-03-20 16:01:22,374 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Max retries exceeded with url: /api/v2/product/0011111038137 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))
+2026-03-20 16:01:22,376 - src.api.main - INFO - Response status: 500
+2026-03-20 16:01:34,357 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:01:40,870 - src.api.main - INFO - Initializing models...
+2026-03-20 16:01:40,870 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:01:40,871 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:01:40,872 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:01:40,872 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:04:09,778 - src.api.main - INFO - Initializing models...
+2026-03-20 16:04:09,778 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:04:09,781 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:04:09,782 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:04:09,782 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:04:23,761 - src.api.main - INFO - GET /health
+2026-03-20 16:04:23,767 - src.api.main - INFO - Response status: 200
+2026-03-20 16:04:23,770 - src.api.main - INFO - GET /health
+2026-03-20 16:04:23,771 - src.api.main - INFO - Response status: 200
+2026-03-20 16:04:41,185 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:04:41,194 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:04:41,195 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:04:44,845 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:04:56,145 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 16:04:56,145 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 16:04:56,146 - src.api.main - INFO - Response status: 500
+2026-03-20 16:05:56,363 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:06:05,924 - src.api.main - INFO - Initializing models...
+2026-03-20 16:06:05,925 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:06:05,927 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:06:05,928 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:06:05,928 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:07:23,166 - src.api.main - INFO - GET /health
+2026-03-20 16:07:23,173 - src.api.main - INFO - Response status: 200
+2026-03-20 16:07:23,183 - src.api.main - INFO - GET /health
+2026-03-20 16:07:23,188 - src.api.main - INFO - Response status: 200
+2026-03-20 16:07:33,831 - src.api.main - INFO - OPTIONS /scan/barcode
+2026-03-20 16:07:33,832 - src.api.main - INFO - Response status: 200
+2026-03-20 16:07:33,835 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:07:33,839 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:07:33,839 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:07:36,175 - src.ingestion.barcode_fetcher - WARNING - OpenBeautyFacts API error: Request failed: HTTPSConnectionPool(host='world.openbeautyfacts.org', port=443): Max retries exceeded with url: /api/v2/product/0011111038137 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)'))), trying OpenFoodFacts
+2026-03-20 16:07:36,176 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:07:37,530 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Max retries exceeded with url: /api/v2/product/0011111038137 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))
+2026-03-20 16:07:37,531 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Max retries exceeded with url: /api/v2/product/0011111038137 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))
+2026-03-20 16:07:37,532 - src.api.main - INFO - Response status: 500
+2026-03-20 16:09:18,378 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:09:18,381 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:09:18,381 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:09:20,364 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:09:31,819 - src.ingestion.barcode_fetcher - ERROR - OpenFoodFacts API error: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 16:09:31,819 - src.api.main - ERROR - API error: Failed to fetch from OpenFoodFacts: Request failed: HTTPSConnectionPool(host='world.openfoodfacts.org', port=443): Read timed out. (read timeout=10)
+2026-03-20 16:09:31,820 - src.api.main - INFO - Response status: 500
+2026-03-20 16:17:28,525 - src.api.main - INFO - Initializing models...
+2026-03-20 16:17:28,525 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:17:28,527 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:17:28,527 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:17:28,527 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:17:31,889 - src.api.main - INFO - GET /health
+2026-03-20 16:17:31,891 - src.api.main - INFO - Response status: 200
+2026-03-20 16:17:31,895 - src.api.main - INFO - GET /health
+2026-03-20 16:17:31,896 - src.api.main - INFO - Response status: 200
+2026-03-20 16:17:32,710 - src.api.main - INFO - GET /health
+2026-03-20 16:17:32,712 - src.api.main - INFO - Response status: 200
+2026-03-20 16:17:32,714 - src.api.main - INFO - GET /health
+2026-03-20 16:17:32,715 - src.api.main - INFO - Response status: 200
+2026-03-20 16:17:39,993 - src.api.main - INFO - OPTIONS /scan/barcode
+2026-03-20 16:17:39,993 - src.api.main - INFO - Response status: 200
+2026-03-20 16:17:39,996 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:17:40,000 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:17:40,000 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:17:42,659 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:17:44,388 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 0011111038137
+2026-03-20 16:17:44,389 - src.api.main - WARNING - Product not found for barcode: 0011111038137. Returning demo data.
+2026-03-20 16:17:44,395 - src.api.main - INFO - Response status: 200
+2026-03-20 16:18:37,233 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:18:37,236 - src.api.main - INFO - Fetching product for barcode: 8904221697273
+2026-03-20 16:18:37,236 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 8904221697273
+2026-03-20 16:18:38,509 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 8904221697273
+2026-03-20 16:18:40,337 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 8904221697273
+2026-03-20 16:18:40,338 - src.api.main - WARNING - Product not found for barcode: 8904221697273. Returning demo data.
+2026-03-20 16:18:40,342 - src.api.main - INFO - Response status: 200
+2026-03-20 16:19:38,453 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:19:38,456 - src.api.main - INFO - Fetching product for barcode: 8001841003312
+2026-03-20 16:19:38,457 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 8001841003312
+2026-03-20 16:19:40,590 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 8001841003312
+2026-03-20 16:19:42,454 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 8001841003312
+2026-03-20 16:19:42,455 - src.api.main - WARNING - Product not found for barcode: 8001841003312. Returning demo data.
+2026-03-20 16:19:42,458 - src.api.main - INFO - Response status: 200
+2026-03-20 16:20:29,919 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:20:34,191 - src.api.main - INFO - Initializing models...
+2026-03-20 16:20:34,191 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:20:34,193 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:20:34,193 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:20:34,193 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:20:34,883 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:20:38,378 - src.api.main - INFO - Initializing models...
+2026-03-20 16:20:38,378 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:20:38,380 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:20:38,380 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:20:38,380 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:20:52,582 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:21:02,745 - src.api.main - INFO - Initializing models...
+2026-03-20 16:21:02,746 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:21:02,748 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:21:02,748 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:21:02,748 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:21:10,357 - src.api.main - INFO - GET /health
+2026-03-20 16:21:10,363 - src.api.main - INFO - Response status: 200
+2026-03-20 16:21:10,386 - src.api.main - INFO - GET /health
+2026-03-20 16:21:10,398 - src.api.main - INFO - Response status: 200
+2026-03-20 16:21:14,446 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:21:14,450 - src.api.main - INFO - Fetching product for barcode: 8001841003312
+2026-03-20 16:21:14,451 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 8001841003312
+2026-03-20 16:21:16,282 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 8001841003312
+2026-03-20 16:21:17,862 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 8001841003312
+2026-03-20 16:21:17,862 - src.api.main - WARNING - Product not found for barcode: 8001841003312
+2026-03-20 16:21:17,863 - src.api.main - INFO - Response status: 404
+2026-03-20 16:21:51,853 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:21:52,107 - src.api.main - INFO - Fetching product for barcode: 5000159510012
+2026-03-20 16:21:52,129 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5000159510012
+2026-03-20 16:21:53,782 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5000159510012
+2026-03-20 16:21:55,327 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5000159510012
+2026-03-20 16:21:55,328 - src.api.main - WARNING - Product not found for barcode: 5000159510012
+2026-03-20 16:21:55,329 - src.api.main - INFO - Response status: 404
+2026-03-20 16:23:48,204 - src.api.main - INFO - GET /health
+2026-03-20 16:23:48,206 - src.api.main - INFO - Response status: 200
+2026-03-20 16:23:48,209 - src.api.main - INFO - GET /health
+2026-03-20 16:23:48,209 - src.api.main - INFO - Response status: 200
+2026-03-20 16:23:50,929 - src.api.main - INFO - GET /health
+2026-03-20 16:23:50,929 - src.api.main - INFO - Response status: 200
+2026-03-20 16:23:50,933 - src.api.main - INFO - GET /health
+2026-03-20 16:23:50,934 - src.api.main - INFO - Response status: 200
+2026-03-20 16:23:55,802 - src.api.main - INFO - GET /health
+2026-03-20 16:23:55,803 - src.api.main - INFO - Response status: 200
+2026-03-20 16:23:55,812 - src.api.main - INFO - GET /health
+2026-03-20 16:23:55,815 - src.api.main - INFO - Response status: 200
+2026-03-20 16:24:02,445 - src.api.main - INFO - GET /ingredient/Water
+2026-03-20 16:24:02,446 - src.preprocessing.ingredient_normaliser - INFO - Normalized 1 ingredients from raw text
+2026-03-20 16:24:02,450 - src.api.main - INFO - Response status: 200
+2026-03-20 16:24:02,456 - src.api.main - INFO - GET /ingredient/Glycerin
+2026-03-20 16:24:02,457 - src.preprocessing.ingredient_normaliser - INFO - Normalized 1 ingredients from raw text
+2026-03-20 16:24:02,458 - src.api.main - INFO - Response status: 200
+2026-03-20 16:24:02,463 - src.api.main - INFO - GET /ingredient/Cetyl Alcohol
+2026-03-20 16:24:02,464 - src.preprocessing.ingredient_normaliser - INFO - Normalized 1 ingredients from raw text
+2026-03-20 16:24:02,465 - src.api.main - INFO - Response status: 200
+2026-03-20 16:24:02,471 - src.api.main - INFO - GET /ingredient/Stearic Acid
+2026-03-20 16:24:02,473 - src.preprocessing.ingredient_normaliser - INFO - Normalized 1 ingredients from raw text
+2026-03-20 16:24:02,475 - src.api.main - INFO - Response status: 200
+2026-03-20 16:24:02,482 - src.api.main - INFO - GET /ingredient/Petrolatum
+2026-03-20 16:24:02,484 - src.preprocessing.ingredient_normaliser - INFO - Normalized 1 ingredients from raw text
+2026-03-20 16:24:02,485 - src.api.main - INFO - Response status: 200
+2026-03-20 16:24:37,867 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:24:42,326 - src.api.main - INFO - Initializing models...
+2026-03-20 16:24:42,326 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:24:42,328 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:24:42,328 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:24:42,329 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:25:17,972 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:25:17,979 - src.api.main - INFO - Fetching product for barcode: 5449000000996
+2026-03-20 16:25:17,979 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000000996
+2026-03-20 16:25:20,238 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000000996
+2026-03-20 16:25:23,713 - src.ingestion.barcode_fetcher - INFO - Successfully fetched from OpenFoodFacts in 5.73s
+2026-03-20 16:25:23,714 - src.api.main - INFO - Found product: Coca-Cola Original Taste
+2026-03-20 16:25:23,714 - src.preprocessing.ingredient_normaliser - INFO - Normalized 6 ingredients from raw text
+2026-03-20 16:25:23,718 - src.models.product_scorer - INFO - Scoring product: Coca-Cola Original Taste with 6 ingredients
+2026-03-20 16:25:23,719 - src.models.product_scorer - INFO - Product scored: Grade A (score: 9.0/10)
+2026-03-20 16:25:23,719 - src.api.main - INFO - Product scored: A
+2026-03-20 16:25:23,720 - src.api.main - INFO - Response status: 200
+2026-03-20 16:27:25,719 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:27:30,257 - src.api.main - INFO - Initializing models...
+2026-03-20 16:27:30,264 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:27:30,270 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:27:30,273 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:27:30,290 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:27:31,600 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:27:36,136 - src.api.main - INFO - Initializing models...
+2026-03-20 16:27:36,137 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:27:36,143 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:27:36,146 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:27:36,149 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:27:56,633 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:28:10,195 - src.api.main - INFO - Initializing models...
+2026-03-20 16:28:10,195 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:28:10,196 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:28:10,196 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:28:10,196 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:28:17,876 - src.api.main - INFO - GET /health
+2026-03-20 16:28:17,879 - src.api.main - INFO - Response status: 200
+2026-03-20 16:28:17,884 - src.api.main - INFO - GET /health
+2026-03-20 16:28:17,893 - src.api.main - INFO - Response status: 200
+2026-03-20 16:28:27,924 - src.api.main - INFO - OPTIONS /scan/barcode
+2026-03-20 16:28:27,924 - src.api.main - INFO - Response status: 200
+2026-03-20 16:28:27,927 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:28:27,931 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:28:27,931 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:28:30,320 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:28:32,084 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 0011111038137
+2026-03-20 16:28:34,211 - src.ingestion.barcode_fetcher - ERROR - EAN-Search API error: EAN-Search request failed: 404 Client Error: Not Found for url: https://www.ean-search.org/api/1/json?barcode=0011111038137&op=barcode-lookup
+2026-03-20 16:28:34,211 - src.api.main - ERROR - API error: Failed to fetch from EAN-Search: EAN-Search request failed: 404 Client Error: Not Found for url: https://www.ean-search.org/api/1/json?barcode=0011111038137&op=barcode-lookup
+2026-03-20 16:28:34,212 - src.api.main - INFO - Response status: 500
+2026-03-20 16:29:11,976 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:29:16,708 - src.api.main - INFO - Initializing models...
+2026-03-20 16:29:16,708 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:29:16,709 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:29:16,710 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:29:16,710 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:30:35,012 - src.api.main - INFO - Initializing models...
+2026-03-20 16:30:35,013 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:30:35,014 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:30:35,014 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:30:35,014 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:31:32,013 - src.api.main - INFO - GET /health
+2026-03-20 16:31:32,015 - src.api.main - INFO - Response status: 200
+2026-03-20 16:31:32,018 - src.api.main - INFO - GET /health
+2026-03-20 16:31:32,019 - src.api.main - INFO - Response status: 200
+2026-03-20 16:31:40,746 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:31:40,749 - src.api.main - INFO - Fetching product for barcode: 0011111038137
+2026-03-20 16:31:40,749 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 0011111038137
+2026-03-20 16:31:43,251 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 0011111038137
+2026-03-20 16:31:46,318 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 0011111038137
+2026-03-20 16:31:47,987 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 0011111038137
+2026-03-20 16:31:47,987 - src.api.main - WARNING - Product not found for barcode: 0011111038137. Returning demo data.
+2026-03-20 16:31:47,991 - src.api.main - INFO - Response status: 200
+2026-03-20 16:32:23,669 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:32:23,671 - src.api.main - INFO - Fetching product for barcode: 5012254003405
+2026-03-20 16:32:23,672 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5012254003405
+2026-03-20 16:32:25,774 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5012254003405
+2026-03-20 16:32:27,726 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5012254003405
+2026-03-20 16:32:29,814 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5012254003405
+2026-03-20 16:32:29,815 - src.api.main - WARNING - Product not found for barcode: 5012254003405. Returning demo data.
+2026-03-20 16:32:29,817 - src.api.main - INFO - Response status: 200
+2026-03-20 16:32:43,325 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:32:43,367 - src.api.main - INFO - Fetching product for barcode: 5449000000026
+2026-03-20 16:32:43,376 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000000026
+2026-03-20 16:32:45,325 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000000026
+2026-03-20 16:32:49,274 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5449000000026
+2026-03-20 16:32:50,683 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5449000000026
+2026-03-20 16:32:50,683 - src.api.main - WARNING - Product not found for barcode: 5449000000026. Returning demo data.
+2026-03-20 16:32:50,685 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:03,493 - src.api.main - INFO - GET /health
+2026-03-20 16:33:03,495 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:03,500 - src.api.main - INFO - GET /health
+2026-03-20 16:33:03,503 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:06,728 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:33:06,730 - src.api.main - INFO - Fetching product for barcode: 5449000000996
+2026-03-20 16:33:06,731 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000000996
+2026-03-20 16:33:08,219 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000000996
+2026-03-20 16:33:10,491 - src.ingestion.barcode_fetcher - INFO - Successfully fetched from OpenFoodFacts in 3.76s
+2026-03-20 16:33:10,493 - src.api.main - INFO - Found product: Coca-Cola Original Taste
+2026-03-20 16:33:10,493 - src.preprocessing.ingredient_normaliser - INFO - Normalized 6 ingredients from raw text
+2026-03-20 16:33:10,497 - src.models.product_scorer - INFO - Scoring product: Coca-Cola Original Taste with 6 ingredients
+2026-03-20 16:33:10,498 - src.models.product_scorer - INFO - Product scored: Grade A (score: 9.0/10)
+2026-03-20 16:33:10,499 - src.api.main - INFO - Product scored: A
+2026-03-20 16:33:10,500 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:17,339 - src.api.main - INFO - GET /health
+2026-03-20 16:33:17,340 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:17,342 - src.api.main - INFO - GET /health
+2026-03-20 16:33:17,343 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:21,073 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:33:21,075 - src.api.main - INFO - Fetching product for barcode: 7613032916521
+2026-03-20 16:33:21,075 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 7613032916521
+2026-03-20 16:33:22,972 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 7613032916521
+2026-03-20 16:33:25,662 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 7613032916521
+2026-03-20 16:33:27,136 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 7613032916521
+2026-03-20 16:33:27,137 - src.api.main - WARNING - Product not found for barcode: 7613032916521. Returning demo data.
+2026-03-20 16:33:27,139 - src.api.main - INFO - Response status: 200
+2026-03-20 16:33:59,594 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:33:59,596 - src.api.main - INFO - Fetching product for barcode: 5000112504847
+2026-03-20 16:33:59,597 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5000112504847
+2026-03-20 16:34:01,357 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5000112504847
+2026-03-20 16:34:02,897 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5000112504847
+2026-03-20 16:34:04,504 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5000112504847
+2026-03-20 16:34:04,504 - src.api.main - WARNING - Product not found for barcode: 5000112504847. Returning demo data.
+2026-03-20 16:34:04,507 - src.api.main - INFO - Response status: 200
+2026-03-20 16:34:18,063 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:34:18,068 - src.api.main - INFO - Response status: 422
+2026-03-20 16:34:24,291 - src.api.main - INFO - GET /health
+2026-03-20 16:34:24,292 - src.api.main - INFO - Response status: 200
+2026-03-20 16:34:24,295 - src.api.main - INFO - GET /health
+2026-03-20 16:34:24,296 - src.api.main - INFO - Response status: 200
+2026-03-20 16:34:30,156 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:34:30,160 - src.api.main - INFO - Fetching product for barcode: 5020063022120
+2026-03-20 16:34:30,161 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5020063022120
+2026-03-20 16:34:31,489 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5020063022120
+2026-03-20 16:34:32,870 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5020063022120
+2026-03-20 16:34:34,380 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5020063022120
+2026-03-20 16:34:34,381 - src.api.main - WARNING - Product not found for barcode: 5020063022120. Returning demo data.
+2026-03-20 16:34:34,384 - src.api.main - INFO - Response status: 200
+2026-03-20 16:35:45,269 - src.api.main - INFO - Shutting down API...
+2026-03-20 16:35:53,323 - src.api.main - INFO - Initializing models...
+2026-03-20 16:35:53,323 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-20 16:35:53,325 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:35:53,326 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-20 16:35:53,327 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-20 16:36:24,881 - src.api.main - INFO - GET /health
+2026-03-20 16:36:24,884 - src.api.main - INFO - Response status: 200
+2026-03-20 16:36:24,888 - src.api.main - INFO - GET /health
+2026-03-20 16:36:24,889 - src.api.main - INFO - Response status: 200
+2026-03-20 16:36:27,551 - src.api.main - INFO - GET /health
+2026-03-20 16:36:27,552 - src.api.main - INFO - GET /health
+2026-03-20 16:36:27,553 - src.api.main - INFO - Response status: 200
+2026-03-20 16:36:27,554 - src.api.main - INFO - Response status: 200
+2026-03-20 16:36:29,505 - src.api.main - INFO - GET /health
+2026-03-20 16:36:29,506 - src.api.main - INFO - GET /health
+2026-03-20 16:36:29,507 - src.api.main - INFO - Response status: 200
+2026-03-20 16:36:29,508 - src.api.main - INFO - Response status: 200
+2026-03-20 16:36:44,728 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:36:44,733 - src.api.main - INFO - Fetching product for barcode: 1234567890123
+2026-03-20 16:36:44,733 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 1234567890123
+2026-03-20 16:36:46,631 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 1234567890123
+2026-03-20 16:36:49,321 - src.ingestion.barcode_fetcher - INFO - Successfully fetched from OpenFoodFacts in 4.59s
+2026-03-20 16:36:49,322 - src.api.main - INFO - Found product: Test product API
+2026-03-20 16:36:49,322 - src.preprocessing.ingredient_normaliser - INFO - Normalized 4 ingredients from raw text
+2026-03-20 16:36:49,326 - src.models.product_scorer - INFO - Scoring product: Test product API with 4 ingredients
+2026-03-20 16:36:49,326 - src.models.product_scorer - INFO - Product scored: Grade A (score: 9.0/10)
+2026-03-20 16:36:49,327 - src.api.main - INFO - Product scored: A
+2026-03-20 16:36:49,328 - src.api.main - INFO - Response status: 200
+2026-03-20 16:37:10,552 - src.api.main - INFO - POST /scan/barcode
+2026-03-20 16:37:10,554 - src.api.main - INFO - Fetching product for barcode: 5000112504847
+2026-03-20 16:37:10,555 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5000112504847
+2026-03-20 16:37:11,930 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5000112504847
+2026-03-20 16:37:13,399 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5000112504847
+2026-03-20 16:37:15,148 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5000112504847
+2026-03-20 16:37:15,148 - src.api.main - WARNING - Product not found for barcode: 5000112504847. Returning demo data.
+2026-03-20 16:37:15,152 - src.api.main - INFO - Response status: 200
+2026-03-20 19:09:49,767 - src.api.main - INFO - GET /health
+2026-03-20 19:09:49,770 - src.api.main - INFO - Response status: 200
+2026-03-20 19:09:49,866 - src.api.main - INFO - GET /health
+2026-03-20 19:09:49,872 - src.api.main - INFO - Response status: 200
+2026-03-21 11:52:40,736 - src.api.main - INFO - GET /health
+2026-03-21 11:52:40,738 - src.api.main - INFO - Response status: 200
+2026-03-21 11:52:40,744 - src.api.main - INFO - GET /health
+2026-03-21 11:52:40,747 - src.api.main - INFO - Response status: 200
+2026-03-21 11:53:16,955 - src.api.main - INFO - OPTIONS /scan/barcode
+2026-03-21 11:53:16,963 - src.api.main - INFO - Response status: 200
+2026-03-21 11:53:17,047 - src.api.main - INFO - POST /scan/barcode
+2026-03-21 11:53:17,065 - src.api.main - INFO - Fetching product for barcode: 5449000000996
+2026-03-21 11:53:17,068 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000000996
+2026-03-21 11:53:20,927 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000000996
+2026-03-21 11:53:26,553 - src.ingestion.barcode_fetcher - INFO - Successfully fetched from OpenFoodFacts in 9.49s
+2026-03-21 11:53:26,559 - src.api.main - INFO - Found product: Coca-Cola Original Taste
+2026-03-21 11:53:26,566 - src.preprocessing.ingredient_normaliser - INFO - Normalized 6 ingredients from raw text
+2026-03-21 11:53:26,585 - src.models.product_scorer - INFO - Scoring product: Coca-Cola Original Taste with 6 ingredients
+2026-03-21 11:53:26,588 - src.models.product_scorer - INFO - Product scored: Grade A (score: 9.0/10)
+2026-03-21 11:53:26,593 - src.api.main - INFO - Product scored: A
+2026-03-21 11:53:26,604 - src.api.main - INFO - Response status: 200
+2026-03-21 11:55:35,039 - src.api.main - INFO - POST /scan/barcode
+2026-03-21 11:55:35,186 - src.api.main - INFO - Fetching product for barcode: 5900754005868
+2026-03-21 11:55:35,204 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5900754005868
+2026-03-21 11:55:39,279 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5900754005868
+2026-03-21 11:55:42,433 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5900754005868
+2026-03-21 11:55:47,752 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5900754005868
+2026-03-21 11:55:47,761 - src.api.main - WARNING - Product not found for barcode: 5900754005868. Returning demo data.
+2026-03-21 11:55:47,767 - src.api.main - INFO - Response status: 200
+2026-03-21 12:20:38,645 - src.api.main - INFO - GET /health
+2026-03-21 12:20:38,708 - src.api.main - INFO - Response status: 200
+2026-03-21 12:20:39,051 - src.api.main - INFO - GET /health
+2026-03-21 12:20:39,119 - src.api.main - INFO - Response status: 200
+2026-03-21 12:24:51,769 - src.api.main - INFO - Shutting down API...
+2026-03-21 12:25:12,937 - src.api.main - INFO - Initializing models...
+2026-03-21 12:25:12,938 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-21 12:25:12,945 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-21 12:25:12,946 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-21 12:25:12,948 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-21 12:26:09,352 - src.api.main - INFO - Shutting down API...
+2026-03-21 12:26:19,676 - src.api.main - INFO - Initializing models...
+2026-03-21 12:26:19,682 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-21 12:26:19,728 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-21 12:26:19,743 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-21 12:26:19,764 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-21 12:26:20,015 - src.api.main - INFO - POST /scan/barcode
+2026-03-21 12:26:20,027 - src.api.main - INFO - Fetching product for barcode: 5449000112019
+2026-03-21 12:26:20,028 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenBeautyFacts for barcode: 5449000112019
+2026-03-21 12:26:23,199 - src.ingestion.barcode_fetcher - INFO - Fetching product from OpenFoodFacts for barcode: 5449000112019
+2026-03-21 12:26:25,953 - src.ingestion.barcode_fetcher - INFO - Fetching product from EAN-Search for barcode: 5449000112019
+2026-03-21 12:26:27,485 - src.ingestion.barcode_fetcher - ERROR - Product not found in any database for barcode: 5449000112019
+2026-03-21 12:26:27,486 - src.api.main - WARNING - Could not fetch product for barcode 5449000112019: Product with barcode 5449000112019 not found in OpenBeautyFacts, OpenFoodFacts, or EAN-Search. Returning demo data.
+2026-03-21 12:26:27,489 - src.api.main - INFO - Response status: 200
+2026-03-21 12:26:27,490 - src.api.main - INFO - GET /health
+2026-03-21 12:26:27,493 - src.api.main - INFO - Response status: 200
+2026-03-21 12:26:37,767 - src.api.main - INFO - GET /health
+2026-03-21 12:26:37,768 - src.api.main - INFO - Response status: 200
+2026-03-21 12:26:43,710 - src.api.main - INFO - GET /health
+2026-03-21 12:26:43,711 - src.api.main - INFO - Response status: 200
+2026-03-22 11:04:30,593 - src.api.main - INFO - Initializing models...
+2026-03-22 11:04:30,594 - src.features.ingredient_encoder - INFO - Using empty reference database structure
+2026-03-22 11:04:30,596 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-22 11:04:30,597 - src.models.product_scorer - INFO - Initialized ProductScorer
+2026-03-22 11:04:30,599 - src.models.profile_matcher - INFO - Initialized ProfileMatcher with 7 rules
+2026-03-22 11:05:20,599 - src.api.main - INFO - GET /health
+2026-03-22 11:05:20,604 - src.api.main - INFO - Response status: 200
+2026-03-22 11:05:20,610 - src.api.main - INFO - GET /health

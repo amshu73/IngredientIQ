@@ -1,0 +1,65 @@
+2026-03-20 15:30:16,332 - __main__ - INFO - ======================================================================
+2026-03-20 15:30:16,353 - __main__ - INFO - INGREDIENTIQ PIPELINE ORCHESTRATION
+2026-03-20 15:30:16,353 - __main__ - INFO - ======================================================================
+2026-03-20 15:30:16,353 - __main__ - INFO - Project directory: C:\Users\Amshu\OneDrive\Desktop\IngredientIQ
+2026-03-20 15:30:16,353 - __main__ - INFO - Setting up project directories...
+2026-03-20 15:30:16,443 - __main__ - INFO - 
+======================================================================
+2026-03-20 15:30:16,445 - __main__ - INFO - STEP 1: BUILDING REFERENCE DATABASES
+2026-03-20 15:30:16,445 - __main__ - INFO - ======================================================================
+2026-03-20 15:30:16,445 - pipeline.build_reference_db - INFO - Starting reference database build...
+2026-03-20 15:30:16,446 - pipeline.build_reference_db - INFO - Building reference ingredient safety database...
+2026-03-20 15:30:17,086 - pipeline.build_reference_db - INFO - Saved reference database with 21 ingredients to C:\Users\Amshu\OneDrive\Desktop\IngredientIQ\data\reference\ingredient_safety.parquet
+2026-03-20 15:30:17,086 - pipeline.build_reference_db - INFO - Building INCI synonym mapping...
+2026-03-20 15:30:17,093 - pipeline.build_reference_db - INFO - Saved INCI synonyms (26 mappings) to C:\Users\Amshu\OneDrive\Desktop\IngredientIQ\data\reference\inci_synonyms.parquet
+2026-03-20 15:30:17,097 - pipeline.build_reference_db - INFO -    - Ingredients: 21 entries
+2026-03-20 15:30:17,098 - pipeline.build_reference_db - INFO -    - INCI synonyms: 26 mappings
+2026-03-20 15:30:17,101 - __main__ - INFO - 
+======================================================================
+2026-03-20 15:30:17,102 - __main__ - INFO - STEP 2: TRAINING ML MODELS
+2026-03-20 15:30:17,102 - __main__ - INFO - ======================================================================
+2026-03-20 15:30:17,103 - pipeline.train_pipeline - INFO - ======================================================================
+2026-03-20 15:30:17,104 - pipeline.train_pipeline - INFO - INGREDIENTIQ TRAINING PIPELINE
+2026-03-20 15:30:17,105 - pipeline.train_pipeline - INFO - ======================================================================
+2026-03-20 15:30:17,106 - pipeline.train_pipeline - INFO - Generating synthetic training data (500 samples)...
+2026-03-20 15:30:17,108 - pipeline.train_pipeline - INFO - Training data shape: X (500, 4), y (500,)
+2026-03-20 15:30:17,111 - pipeline.train_pipeline - INFO - Label distribution:
+safety_label
+0    215
+1    251
+2     34
+Name: count, dtype: int64
+2026-03-20 15:30:17,111 - pipeline.train_pipeline - INFO - Training safety classifier...
+2026-03-20 15:30:17,112 - src.models.safety_classifier - INFO - Initialized SafetyClassifier with model_type: xgboost
+2026-03-20 15:30:17,305 - src.models.safety_classifier - INFO - Model trained on 400 samples
+2026-03-20 15:30:17,323 - src.models.safety_classifier - INFO - Model accuracy: 1.0000
+2026-03-20 15:30:17,331 - pipeline.train_pipeline - INFO - Training complete!
+2026-03-20 15:30:17,331 - pipeline.train_pipeline - INFO -   Accuracy: 1.0000
+2026-03-20 15:30:17,331 - pipeline.train_pipeline - INFO -   Confusion matrix:
+[[43, 0, 0], [0, 50, 0], [0, 0, 7]]
+2026-03-20 15:30:17,358 - src.models.safety_classifier - INFO - Model saved to C:\Users\Amshu\OneDrive\Desktop\IngredientIQ\models\safety_classifier.pkl
+2026-03-20 15:30:17,363 - pipeline.train_pipeline - INFO - 
+Verifying model files...
+2026-03-20 15:30:17,371 - pipeline.train_pipeline - INFO - 
+======================================================================
+2026-03-20 15:30:17,371 - pipeline.train_pipeline - INFO - TRAINING PIPELINE SUMMARY
+2026-03-20 15:30:17,372 - pipeline.train_pipeline - INFO - ======================================================================
+2026-03-20 15:30:17,372 - pipeline.train_pipeline - INFO - Status: completed
+2026-03-20 15:30:17,372 - pipeline.train_pipeline - INFO - Classifier trained: True
+2026-03-20 15:30:17,372 - pipeline.train_pipeline - INFO - Training samples: 500
+2026-03-20 15:30:17,373 - pipeline.train_pipeline - INFO - ======================================================================
+2026-03-20 15:30:17,375 - __main__ - INFO - 
+======================================================================
+2026-03-20 15:30:17,375 - __main__ - INFO - STEP 3: VERIFYING MODEL FILES
+2026-03-20 15:30:17,375 - __main__ - INFO - ======================================================================
+2026-03-20 15:30:17,384 - __main__ - INFO - 
+======================================================================
+2026-03-20 15:30:17,387 - __main__ - INFO - ======================================================================
+2026-03-20 15:30:17,387 - __main__ - INFO - 
+To start the API server, run:
+2026-03-20 15:30:17,387 - __main__ - INFO -   python run_pipeline.py --serve
+2026-03-20 15:30:17,387 - __main__ - INFO - 
+Or with custom host/port:
+2026-03-20 15:30:17,387 - __main__ - INFO -   python run_pipeline.py --serve --host 0.0.0.0 --port 8000
+2026-03-20 15:30:17,387 - __main__ - INFO - 
+Documentation will be available at: http://localhost:8000/docs
