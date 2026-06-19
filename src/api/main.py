@@ -272,110 +272,56 @@ async def scan_barcode(request: Request, payload: BarcodeRequest) -> ProductSafe
         logger.info(f"Found product: {product_data['product_name']}")
 
     except (ProductNotFoundError, Exception) as e:
-        # Return demo data for ANY failure (product not found, API error, etc.)
-        logger.warning(f"Could not fetch product for barcode {payload.barcode}: {e}. Returning demo data.")
+        # If product completely not found, provide helpful guidance to use manual entry
+        logger.warning(f"Could not fetch product for barcode {payload.barcode}: {e}")
+        
         return ProductSafetyResponse(
-            product_name="Demo Product (barcode not in database)",
-            brand="Sample Brand",
-            grade="C",
-            overall_score=6.2,
-            ingredient_count=9,
-            ingredients=[
-                {
-                    "name": "Water",
-                    "safety_label": "SAFE",
-                    "ewg_score": 1.0,
-                    "chemical_family": "solvent",
-                    "profile_warnings": [],
-                    "explanation": "Essential solvent. No known hazards.",
-                },
-                {
-                    "name": "Glycerin",
-                    "safety_label": "SAFE",
-                    "ewg_score": 1.0,
-                    "chemical_family": "humectant",
-                    "profile_warnings": [],
-                    "explanation": "Skin conditioning agent. Very safe.",
-                },
-                {
-                    "name": "Niacinamide",
-                    "safety_label": "SAFE",
-                    "ewg_score": 1.0,
-                    "chemical_family": "vitamin",
-                    "profile_warnings": [],
-                    "explanation": "Vitamin B3. Beneficial for skin.",
-                },
-                {
-                    "name": "Titanium Dioxide",
-                    "safety_label": "SAFE",
-                    "ewg_score": 2.0,
-                    "chemical_family": "mineral UV filter",
-                    "profile_warnings": [],
-                    "explanation": "Gentle mineral sunscreen. Good for sensitive skin.",
-                },
-                {
-                    "name": "Oxybenzone",
-                    "safety_label": "HAZARDOUS",
-                    "ewg_score": 8.0,
-                    "chemical_family": "UV filter",
-                    "profile_warnings": ["PREGNANT", "SENSITIVE_SKIN"],
-                    "explanation": "Chemical UV filter. Endocrine disruptor. Avoid if pregnant.",
-                },
-                {
-                    "name": "Fragrance",
-                    "safety_label": "MODERATE",
-                    "ewg_score": 6.0,
-                    "chemical_family": "fragrance",
-                    "profile_warnings": ["FRAGRANCE_ALLERGY", "SENSITIVE_SKIN"],
-                    "explanation": "Top cause of cosmetic allergic reactions.",
-                },
-                {
-                    "name": "Methylparaben",
-                    "safety_label": "MODERATE",
-                    "ewg_score": 4.0,
-                    "chemical_family": "preservative",
-                    "profile_warnings": ["PREGNANT"],
-                    "explanation": "Common preservative. Weak hormonal activity.",
-                },
-                {
-                    "name": "Sodium Lauryl Sulfate",
-                    "safety_label": "MODERATE",
-                    "ewg_score": 5.0,
-                    "chemical_family": "surfactant",
-                    "profile_warnings": ["SENSITIVE_SKIN"],
-                    "explanation": "Harsh surfactant. Known skin irritant.",
-                },
-                {
-                    "name": "Retinol",
-                    "safety_label": "MODERATE",
-                    "ewg_score": 5.0,
-                    "chemical_family": "vitamin",
-                    "profile_warnings": ["PREGNANT"],
-                    "explanation": "Vitamin A. Avoid during pregnancy.",
-                },
-            ],
-            worst_ingredients=["Oxybenzone", "Fragrance", "Methylparaben"],
-            profile_warnings=[],
-            recommendation="Demo product (not in database). Try a real barcode from OpenFoodFacts for actual data.",
-            scan_method="barcode",
-        )
-
-    # Extract and normalize ingredients
-    raw_ingredients_text = product_data.get("ingredients_text", "")
-    
-    # If no ingredients found, return demo data with note
-    if not raw_ingredients_text.strip():
-        logger.warning(f"No ingredient information for {product_data['product_name']} (source: {product_data.get('source', 'unknown')})")
-        return ProductSafetyResponse(
-            product_name=product_data["product_name"],
-            brand=product_data.get("brand", "Unknown Brand"),
+            product_name=f"Product with barcode {payload.barcode}",
+            brand="Unknown",
             grade="N/A",
             overall_score=0.0,
             ingredient_count=0,
             ingredients=[],
             worst_ingredients=[],
             profile_warnings=[],
-            recommendation=f"No ingredient information available for this product. Try adding ingredients manually on our Ingredient Checker page.",
+            recommendation=f"❌ Barcode {payload.barcode} not found in our databases.\n\n"
+                          f"✨ Don't worry! Use our Manual Analysis feature:\n\n"
+                          f"1. Find the ingredient list on your product package\n"
+                          f"2. Use POST /scan/manual endpoint\n"
+                          f"3. Enter:\n"
+                          f"   - product_name: 'Your Product Name'\n"
+                          f"   - ingredients_text: 'Water, Glycerin, etc.'\n"
+                          f"   - user_profiles: ['SENSITIVE_SKIN'] (optional)\n\n"
+                          f"📊 We'll analyze ANY product instantly with full safety breakdown!\n\n"
+                          f"💡 Tip: Look for 'Ingredients:' or 'INCI:' on the package.",
+            scan_method="barcode",
+        )
+
+    # Extract and normalize ingredients
+    raw_ingredients_text = product_data.get("ingredients_text", "")
+    
+    # If no ingredients found, return product info with helpful guidance
+    if not raw_ingredients_text.strip():
+        product_name = product_data.get("product_name", "Unknown Product")
+        brand = product_data.get("brand", "Unknown Brand")
+        logger.warning(f"No ingredient information for {product_name} (source: {product_data.get('source', 'unknown')})")
+        
+        return ProductSafetyResponse(
+            product_name=product_name,
+            brand=brand,
+            grade="N/A",
+            overall_score=0.0,
+            ingredient_count=0,
+            ingredients=[],
+            worst_ingredients=[],
+            profile_warnings=[],
+            recommendation=f"✅ Found product: {product_name} by {brand}.\n\n"
+                          f"⚠️ No ingredient information available in our database.\n\n"
+                          f"📝 Please use the Manual Analysis feature:\n"
+                          f"1. Find the ingredient list on your {product_name} package\n"
+                          f"2. Use POST /scan/manual endpoint\n"
+                          f"3. Paste ingredients in the 'ingredients_text' field\n\n"
+                          f"We'll analyze ANY product instantly!",
             scan_method="barcode",
         )
 

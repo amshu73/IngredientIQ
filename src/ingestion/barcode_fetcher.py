@@ -28,8 +28,9 @@ def fetch_product_by_barcode(barcode: str) -> Dict[str, Any]:
     Fetch product data from Open Beauty Facts or OpenFoodFacts API.
 
     Attempts to fetch from Open Beauty Facts first (cosmetics/beauty products),
-    then falls back to OpenFoodFacts (food products). Returns structured
-    product data with ingredients, brand, and metadata.
+    then falls back to OpenFoodFacts (food products), then EAN-Search, and 
+    finally UPC Database. Returns structured product data with ingredients, 
+    brand, and metadata.
 
     Args:
         barcode: Product barcode as string (EAN-13, EAN-8, UPC-A, etc)
@@ -43,15 +44,15 @@ def fetch_product_by_barcode(barcode: str) -> Dict[str, Any]:
             - categories: List[str], optional
             - labels: List[str], optional
             - barcode: str
-            - source: str (openbeautyfacts|openfoodfacts)
+            - source: str (openbeautyfacts|openfoodfacts|ean-search|upc-database)
 
     Raises:
-        ProductNotFoundError: If product not found in both databases
+        ProductNotFoundError: If product not found in any database
         BarcodeAPIError: If API request fails with non-404 error
     """
     start_time = time.time()
 
-    # Try Open Beauty Facts first
+    # Try Open Beauty Facts first (cosmetics)
     try:
         logger.info(f"Fetching product from OpenBeautyFacts for barcode: {barcode}")
         product_data = _fetch_from_openbeautyfacts(barcode)
@@ -65,7 +66,7 @@ def fetch_product_by_barcode(barcode: str) -> Dict[str, Any]:
     except BarcodeAPIError as e:
         logger.warning(f"OpenBeautyFacts API error: {e}, trying OpenFoodFacts")
 
-    # Fall back to OpenFoodFacts
+    # Fall back to OpenFoodFacts (food/gum products)
     try:
         logger.info(f"Fetching product from OpenFoodFacts for barcode: {barcode}")
         product_data = _fetch_from_openfoodfacts(barcode)
@@ -75,9 +76,23 @@ def fetch_product_by_barcode(barcode: str) -> Dict[str, Any]:
         )
         return product_data
     except ProductNotFoundError:
-        logger.debug(f"Product not found in OpenFoodFacts, trying EAN-Search")
+        logger.debug(f"Product not found in OpenFoodFacts, trying UPC Database")
     except BarcodeAPIError as e:
-        logger.warning(f"OpenFoodFacts API error: {e}, trying EAN-Search")
+        logger.warning(f"OpenFoodFacts API error: {e}, trying UPC Database")
+
+    # Try UPC Database
+    try:
+        logger.info(f"Fetching product from UPC Database for barcode: {barcode}")
+        product_data = _fetch_from_upc_database(barcode)
+        elapsed_time = time.time() - start_time
+        logger.info(
+            f"Successfully fetched from UPC Database in {elapsed_time:.2f}s"
+        )
+        return product_data
+    except ProductNotFoundError:
+        logger.debug(f"Product not found in UPC Database, trying EAN-Search")
+    except BarcodeAPIError as e:
+        logger.warning(f"UPC Database API error: {e}, trying EAN-Search")
 
     # Fall back to EAN-Search
     try:
@@ -91,7 +106,7 @@ def fetch_product_by_barcode(barcode: str) -> Dict[str, Any]:
     except ProductNotFoundError:
         logger.error(f"Product not found in any database for barcode: {barcode}")
         raise ProductNotFoundError(
-            f"Product with barcode {barcode} not found in OpenBeautyFacts, OpenFoodFacts, or EAN-Search"
+            f"Product with barcode {barcode} not found in OpenBeautyFacts, OpenFoodFacts, UPC Database, or EAN-Search"
         )
     except BarcodeAPIError as e:
         logger.error(f"EAN-Search API error: {e}")
@@ -205,10 +220,11 @@ def _fetch_from_ean_search(barcode: str) -> Dict[str, Any]:
         ProductNotFoundError: If product returns empty result
         BarcodeAPIError: If API request fails
     """
-    url = f"https://www.ean-search.org/api/1/json"
+    url = f"https://api.ean-search.org/api"
     params = {
+        "op": "barcode-lookup",
         "barcode": barcode,
-        "op": "barcode-lookup"
+        "format": "json"
     }
     headers = {"User-Agent": "IngredientIQ/1.0"}
 
@@ -222,16 +238,25 @@ def _fetch_from_ean_search(barcode: str) -> Dict[str, Any]:
     except requests.exceptions.RequestException as e:
         raise BarcodeAPIError(f"EAN-Search request failed: {e}")
 
-    data = response.json()
+    try:
+        data = response.json()
+    except Exception as e:
+        raise BarcodeAPIError(f"Failed to parse EAN-Search response: {e}")
 
-    # Check if product was found (status=0 means success, status!=0 means not found)
-    if data.get("status") != 0 or not data.get("product"):
+    # Check multiple possible response formats
+    if isinstance(data, list) and len(data) > 0:
+        product = data[0]
+    elif isinstance(data, dict) and data.get("product"):
+        product = data.get("product", {})
+    elif isinstance(data, dict) and data.get("name"):
+        product = data
+    else:
         raise ProductNotFoundError(f"Product {barcode} not found on EAN-Search")
-
-    product = data.get("product", {})
+    
+    product_name = product.get("name") or product.get("title") or product.get("productname") or "Unknown Product"
     
     return {
-        "product_name": product.get("title", "Unknown Product"),
+        "product_name": product_name,
         "brand": product.get("brand", ""),
         "ingredients_text": "",  # EAN-Search doesn't provide ingredients
         "image_url": product.get("image", ""),
@@ -239,4 +264,56 @@ def _fetch_from_ean_search(barcode: str) -> Dict[str, Any]:
         "labels": [],
         "barcode": barcode,
         "source": "ean-search",
+    }
+
+
+def _fetch_from_upc_database(barcode: str) -> Dict[str, Any]:
+    """
+    Fetch product data from UPC Database API.
+    
+    Another fallback source for product information.
+
+    Args:
+        barcode: Product barcode
+
+    Returns:
+        Structured product dictionary
+
+    Raises:
+        ProductNotFoundError: If product not found
+        BarcodeAPIError: If API request fails
+    """
+    url = f"https://api.upcitemdb.com/prod/trial/lookup"
+    params = {"upc": barcode}
+    headers = {"User-Agent": "IngredientIQ/1.0"}
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == 404:
+            raise ProductNotFoundError(f"Product {barcode} not found on UPC Database")
+        raise BarcodeAPIError(f"UPC Database HTTP {response.status_code}: {e}")
+    except requests.exceptions.RequestException as e:
+        raise BarcodeAPIError(f"UPC Database request failed: {e}")
+
+    try:
+        data = response.json()
+    except Exception as e:
+        raise BarcodeAPIError(f"Failed to parse UPC Database response: {e}")
+
+    if data.get("code") != "OK" or not data.get("items"):
+        raise ProductNotFoundError(f"Product {barcode} not found on UPC Database")
+
+    item = data["items"][0]
+    
+    return {
+        "product_name": item.get("title", "Unknown Product"),
+        "brand": item.get("brand", ""),
+        "ingredients_text": "",  # UPC Database doesn't provide ingredients
+        "image_url": item.get("images", [""])[0] if item.get("images") else "",
+        "categories": item.get("category", "").split(" > "),
+        "labels": [],
+        "barcode": barcode,
+        "source": "upc-database",
     }
