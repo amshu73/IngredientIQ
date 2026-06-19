@@ -77,6 +77,49 @@ class ImageRequest(BaseModel):
         return v
 
 
+class ManualIngredientRequest(BaseModel):
+    """Request body for manual ingredient list analysis."""
+
+    product_name: Optional[str] = Field(
+        default="Custom Product",
+        description="Product name (optional)",
+        example="My Moisturizer",
+    )
+    brand: Optional[str] = Field(
+        default="Unknown Brand",
+        description="Brand name (optional)",
+        example="Brand X",
+    )
+    ingredients_text: str = Field(
+        ...,
+        min_length=3,
+        description="Comma-separated list of ingredients",
+        example="Water, Glycerin, Niacinamide, Phenoxyethanol, Fragrance",
+    )
+    user_profiles: List[str] = Field(
+        default_factory=list,
+        description="List of health profile tags",
+        example=["SENSITIVE_SKIN"],
+    )
+
+    @validator("user_profiles")
+    def validate_profiles(cls, v: List[str]) -> List[str]:
+        """Validate profiles are uppercase."""
+        valid_profiles = {
+            "SENSITIVE_SKIN",
+            "PREGNANT",
+            "DIABETIC",
+            "VEGAN",
+            "NUT_ALLERGY",
+            "FRAGRANCE_ALLERGY",
+            "ACNE_PRONE",
+        }
+        for profile in v:
+            if profile not in valid_profiles:
+                raise ValueError(f"Unknown profile: {profile}")
+        return v
+
+
 class IngredientResult(BaseModel):
     """Safety assessment for a single ingredient."""
 

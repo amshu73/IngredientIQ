@@ -24,18 +24,60 @@ EU_ALLERGENS = {
     "phenoxyethanol",
 }
 
-# Chemical families
+# Chemical families - expanded for better coverage
 CHEMICAL_FAMILIES = {
-    "preservative": ["paraben", "phenoxyethanol", "sodium benzoate", "potassium sorbate"],
-    "surfactant": ["sodium lauryl sulfate", "sodium laureth sulfate", "cetearyl"],
-    "emollient": ["glycerin", "squalane", "jojoba", "argan", "coconut"],
-    "fragrance": ["fragrance", "parfum", "essential oil", "limonene"],
-    "colorant": ["ci ", "titanium dioxide", "iron oxide", "mica"],
-    "thickener": ["xanthan gum", "carbomer", "cellulose"],
-    "humectant": ["glycerin", "hyaluronic acid", "sorbitol"],
-    "antioxidant": ["tocopherol", "ascorbic acid", "bht", "bha"],
-    "chelating agent": ["edta", "citrates"],
-    "exfoliant": ["salicylic acid", "glycolic acid", "lactic acid"],
+    "preservative": [
+        "paraben", "phenoxyethanol", "sodium benzoate", "potassium sorbate",
+        "benzyl", "sorbic acid", "benzoic acid", "dehydroacetic acid"
+    ],
+    "surfactant": [
+        "sodium lauryl sulfate", "sodium laureth sulfate", "cetearyl",
+        "coco-glucoside", "decyl glucoside", "laureth", "lauryl",
+        "cocamidopropyl betaine", "sodium cocoyl", "disodium cocoamphodiacetate"
+    ],
+    "emollient": [
+        "glycerin", "squalane", "jojoba", "argan", "coconut",
+        "shea butter", "cocoa butter", "cetyl alcohol", "stearyl alcohol",
+        "caprylic", "capric", "dimethicone", "isopropyl", "mineral oil"
+    ],
+    "fragrance": [
+        "fragrance", "parfum", "essential oil", "limonene", "linalool",
+        "citronellol", "geraniol", "eugenol", "coumarin"
+    ],
+    "colorant": [
+        "ci ", "titanium dioxide", "iron oxide", "mica", "carmine",
+        "ultramarine", "chromium", "pigment"
+    ],
+    "thickener": [
+        "xanthan gum", "carbomer", "cellulose", "acrylate", "hydroxyethyl",
+        "guar gum", "locust bean", "carrageenan", "agar"
+    ],
+    "humectant": [
+        "glycerin", "hyaluronic acid", "sorbitol", "propylene glycol",
+        "butylene glycol", "panthenol", "urea", "honey"
+    ],
+    "antioxidant": [
+        "tocopherol", "ascorbic acid", "bht", "bha", "vitamin e",
+        "vitamin c", "green tea", "resveratrol", "ferulic acid"
+    ],
+    "chelating agent": [
+        "edta", "citrates", "phytic acid", "gluconic acid"
+    ],
+    "exfoliant": [
+        "salicylic acid", "glycolic acid", "lactic acid", "malic acid",
+        "mandelic acid", "citric acid", "tartaric acid", "pha", "aha", "bha"
+    ],
+    "uv filter": [
+        "oxybenzone", "avobenzone", "octinoxate", "octocrylene",
+        "zinc oxide", "titanium dioxide", "mexoryl", "tinosorb"
+    ],
+    "solvent": [
+        "water", "aqua", "alcohol", "ethanol", "propanol", "acetone"
+    ],
+    "vitamin": [
+        "retinol", "niacinamide", "tocopherol", "ascorbic", "panthenol",
+        "biotin", "pyridoxine", "thiamine"
+    ],
 }
 
 
@@ -121,7 +163,7 @@ class IngredientEncoder:
                 return {
                     "ingredient_name": name,
                     "ewg_score": float(row.get("ewg_score", 5.0)),
-                    "hazard_level": str(row.get("hazard_level", "UNKNOWN")),
+                    "safety_label": str(row.get("safety_label", "UNKNOWN")),
                     "chemical_family": str(row.get("chemical_family", "unknown")),
                     "allergen": bool(row.get("allergen", False)),
                     "comedogenic_rating": float(row.get("comedogenic_rating", 2.0)),
@@ -151,6 +193,7 @@ class IngredientEncoder:
     def _encode_heuristic(self, name_lower: str) -> Dict[str, any]:
         """
         Generate features using heuristic rules when reference DB unavailable.
+        Enhanced with extensive pattern matching for common cosmetic ingredients.
 
         Args:
             name_lower: Lowercase ingredient name
@@ -171,33 +214,106 @@ class IngredientEncoder:
             "fragrance": 4.0,
             "colorant": 2.0,
             "emollient": 1.0,
+            "humectant": 1.0,
+            "antioxidant": 1.0,
+            "thickener": 1.0,
             "unknown": 5.0,
         }
         ewg_score = family_ewg_defaults.get(chemical_family, 5.0)
 
-        # Adjust for known problematic ingredients
-        if any(x in name_lower for x in ["oxybenzone", "coal tar", "deet"]):
+        # HAZARDOUS ingredients (EWG 8-10)
+        if any(x in name_lower for x in [
+            "oxybenzone", "coal tar", "deet", "triclosan", "triclocarban",
+            "formaldehyde", "quaternium-15", "dmdm hydantoin",
+            "lead", "mercury", "hydroquinone", "benzene", "toluene"
+        ]):
             ewg_score = 8.0
-            hazard_level = "HAZARDOUS"
-        elif any(x in name_lower for x in ["paraben", "phthalate", "formaldehyde"]):
+            safety_label = "HAZARDOUS"
+        
+        # MODERATE to HIGH concern (EWG 5-7)
+        elif any(x in name_lower for x in [
+            "paraben", "phthalate", "bha", "bht", "petrolatum",
+            "mineral oil", "polyethylene", "propylene glycol",
+            "sodium lauryl sulfate", "sodium laureth sulfate",
+            "dea", "tea", "mea", "diethanolamine", "triethanolamine",
+            "siloxane", "cyclotetrasiloxane", "cyclopentasiloxane"
+        ]):
             ewg_score = 6.0
-            hazard_level = "MODERATE"
-        elif any(x in name_lower for x in ["water", "glycerin", "oil"]):
+            safety_label = "MODERATE"
+        
+        # SAFE ingredients (EWG 1-2) - expanded list
+        elif any(x in name_lower for x in [
+            "water", "aqua", "glycerin", "glycerol", "aloe", "chamomile",
+            "green tea", "vitamin e", "tocopherol", "vitamin c", "ascorbic",
+            "hyaluronic", "niacinamide", "panthenol", "allantoin",
+            "ceramide", "peptide", "squalane", "jojoba", "argan oil",
+            "shea butter", "cocoa butter", "coconut oil", "olive oil",
+            "sunflower", "safflower", "rosehip", "zinc oxide",
+            "titanium dioxide", "kaolin", "bentonite", "xanthan gum",
+            "guar gum", "cellulose", "starch", "beta-glucan",
+            "citric acid", "lactic acid", "malic acid",
+            "sodium chloride", "salt", "sucrose", "glucose",
+            "caffeine", "retinol", "alpha hydroxy", "salicylic acid"
+        ]):
             ewg_score = 1.0
-            hazard_level = "SAFE"
+            safety_label = "SAFE"
+        
+        # MODERATE (EWG 3-4) - common but with minor concerns
+        elif any(x in name_lower for x in [
+            "alcohol", "ethanol", "phenoxyethanol", "benzyl",
+            "fragrance", "parfum", "dimethicone", "cyclopentasiloxane",
+            "carbomer", "acrylate", "polymer", "copolymer",
+            "sodium benzoate", "potassium sorbate", "citrus"
+        ]):
+            ewg_score = 3.0
+            safety_label = "MODERATE"
+        
         else:
-            hazard_level = "MODERATE" if ewg_score > 5 else "SAFE"
+            # Default based on family
+            safety_label = "MODERATE" if ewg_score > 4 else "SAFE"
+
+        # Determine comedogenic rating (0-5)
+        comedogenic_rating = 2.0  # default
+        if any(x in name_lower for x in ["coconut", "wheat germ", "flaxseed", "palm", "soybean"]):
+            comedogenic_rating = 4.0
+        elif any(x in name_lower for x in ["dimethicone", "silicone", "petrolatum", "mineral oil"]):
+            comedogenic_rating = 3.0
+        elif any(x in name_lower for x in ["jojoba", "argan", "squalane", "hemp seed", "rosehip"]):
+            comedogenic_rating = 1.0
+        elif any(x in name_lower for x in ["water", "glycerin", "hyaluronic", "niacinamide"]):
+            comedogenic_rating = 0.0
+
+        # Endocrine disruptor check
+        is_endocrine_disruptor = any(x in name_lower for x in [
+            "paraben", "phthalate", "oxybenzone", "triclosan",
+            "bpa", "dioxin", "styrene", "pcb"
+        ])
+
+        # Pregnancy safety
+        is_pregnancy_safe = not any(x in name_lower for x in [
+            "retinol", "retinoic", "retinyl", "salicylic acid",
+            "hydroquinone", "oxybenzone", "formaldehyde",
+            "paraben", "phthalate", "triclosan"
+        ])
+
+        # Vegan check - expanded animal-derived ingredients
+        is_vegan = not any(x in name_lower for x in [
+            "lanolin", "beeswax", "collagen", "keratin", "elastin",
+            "gelatin", "carmine", "cochineal", "guanine", "silk",
+            "cashmere", "milk", "honey", "royal jelly", "propolis",
+            "squalene", "tallow", "lard", "stearic acid", "cholesterol"
+        ])
 
         return {
             "ingredient_name": name_lower,
             "ewg_score": ewg_score,
-            "hazard_level": hazard_level,
+            "safety_label": safety_label,
             "chemical_family": chemical_family,
             "allergen": is_allergen,
-            "comedogenic_rating": 2.0,  # default middle value
-            "endocrine_disruptor": ewg_score > 6,
-            "pregnancy_safe": ewg_score < 7,
-            "vegan": not any(x in name_lower for x in ["lanolin", "beeswax", "collagen"]),
+            "comedogenic_rating": comedogenic_rating,
+            "endocrine_disruptor": is_endocrine_disruptor,
+            "pregnancy_safe": is_pregnancy_safe,
+            "vegan": is_vegan,
         }
 
     @staticmethod
@@ -222,7 +338,7 @@ class IngredientEncoder:
         return {
             "ingredient_name": "unknown",
             "ewg_score": 5.0,
-            "hazard_level": "UNKNOWN",
+            "safety_label": "UNKNOWN",
             "chemical_family": "unknown",
             "allergen": False,
             "comedogenic_rating": 2.0,

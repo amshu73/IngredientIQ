@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: ingredientiq-api
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.9
+  
+  - type: web
+    name: ingredientiq-frontend
+    runtime: node
+    plan: starter
+    buildCommand: cd frontend/react-app && npm install && npm run build
+    startCommand: cd frontend/react-app && npm run preview -- --host 0.0.0.0 --port 3000
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: ingredientiq-api
+          property: url

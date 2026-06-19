@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createContext, useState } from 'react';
 import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
 import Home from './pages/Home';
 import BarcodeScanner from './pages/BarcodeScanner';
 import IngredientChecker from './pages/IngredientChecker';
@@ -24,15 +25,25 @@ function AppContent() {
 
   return (
     <ProfileContext.Provider value={{ selectedProfiles, setSelectedProfiles, profiles }}>
-      <Navbar />
-      <div style={{ paddingTop: '64px' }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/barcode" element={<BarcodeScanner />} />
-          <Route path="/ingredients" element={<IngredientChecker />} />
-          <Route path="/photo" element={<PhotoScanner />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route
+          path="*"
+          element={
+            <>
+              <Navbar />
+              <div style={{ paddingTop: '64px' }}>
+                <Routes>
+                  <Route path="/home" element={<Home />} />
+                  <Route path="/barcode" element={<BarcodeScanner />} />
+                  <Route path="/ingredient-checker" element={<IngredientChecker />} />
+                  <Route path="/photo" element={<PhotoScanner />} />
+                </Routes>
+              </div>
+            </>
+          }
+        />
+      </Routes>
     </ProfileContext.Provider>
   );
 }

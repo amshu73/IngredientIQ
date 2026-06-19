@@ -19,15 +19,60 @@ from src.api.schemas import (
     HealthProfile,
     HealthStatus,
     ImageRequest,
+    ManualIngredientRequest,
     ProductSafetyResponse,
 )
-from src.features.ingredient_encoder import IngredientEncoder
-from src.ingestion.barcode_fetcher import fetch_product_by_barcode, ProductNotFoundError
-from src.ingestion.ocr_extractor import extract_ingredients_from_image
-from src.models.product_scorer import ProductScorer
-from src.models.profile_matcher import ProfileMatcher
-from src.preprocessing.ingredient_normaliser import normalise_ingredient_list
-from src.preprocessing.text_cleaner import extract_potential_ingredients
+
+# Lazy imports - will load when needed
+try:
+    from src.features.ingredient_encoder import IngredientEncoder
+    HAS_ENCODER = True
+except ImportError:
+    HAS_ENCODER = False
+    IngredientEncoder = None
+
+try:
+    from src.ingestion.barcode_fetcher import fetch_product_by_barcode, ProductNotFoundError
+    HAS_BARCODE = True
+except ImportError:
+    HAS_BARCODE = False
+    fetch_product_by_barcode = None
+    ProductNotFoundError = Exception
+
+try:
+    from src.ingestion.ocr_extractor import extract_ingredients_from_image
+    HAS_OCR = True
+except ImportError:
+    HAS_OCR = False
+    extract_ingredients_from_image = None
+
+try:
+    from src.models.product_scorer import ProductScorer
+    HAS_SCORER = True
+except ImportError:
+    HAS_SCORER = False
+    ProductScorer = None
+
+try:
+    from src.models.profile_matcher import ProfileMatcher
+    HAS_MATCHER = True
+except ImportError:
+    HAS_MATCHER = False
+    ProfileMatcher = None
+
+try:
+    from src.preprocessing.ingredient_normaliser import normalise_ingredient_list
+    HAS_NORMALISER = True
+except ImportError:
+    HAS_NORMALISER = False
+    normalise_ingredient_list = None
+
+try:
+    from src.preprocessing.text_cleaner import extract_potential_ingredients
+    HAS_TEXT_CLEANER = True
+except ImportError:
+    HAS_TEXT_CLEANER = False
+    extract_potential_ingredients = None
 
 # ============================================================================
 # LOGGING SETUP
@@ -65,8 +110,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://localhost:3001",
         "http://localhost:5173",
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
         "http://127.0.0.1:5173",
     ],
     allow_credentials=False,
@@ -119,13 +166,32 @@ async def startup_event():
     logger.info("Initializing models...")
 
     try:
-        app_state.encoder = IngredientEncoder()
-        app_state.scorer = ProductScorer()
-        app_state.profile_matcher = ProfileMatcher()
-        app_state.models_loaded = True
-        logger.info("✅ All models loaded successfully")
+        if HAS_ENCODER:
+            # Load reference database
+            reference_db_path = Path("data/reference/ingredient_safety.parquet")
+            app_state.encoder = IngredientEncoder(reference_db_path=reference_db_path)
+        else:
+            logger.warning("IngredientEncoder not available")
+            
+        if HAS_SCORER:
+            app_state.scorer = ProductScorer()
+        else:
+            logger.warning("ProductScorer not available")
+            
+        if HAS_MATCHER:
+            app_state.profile_matcher = ProfileMatcher()
+        else:
+            logger.warning("ProfileMatcher not available")
+        
+        # Mark as loaded if at least some models are available
+        app_state.models_loaded = HAS_ENCODER or HAS_SCORER or HAS_MATCHER
+        
+        if app_state.models_loaded:
+            logger.info("Models loaded (partial or full)")
+        else:
+            logger.warning("No models available - running in demo mode")
     except Exception as e:
-        logger.error(f"❌ Failed to load models: {e}")
+        logger.error(f"Failed to load models: {e}")
         app_state.models_loaded = False
 
 
@@ -296,18 +362,38 @@ async def scan_barcode(request: Request, payload: BarcodeRequest) -> ProductSafe
 
     # Extract and normalize ingredients
     raw_ingredients_text = product_data.get("ingredients_text", "")
+    
+    # If no ingredients found, return demo data with note
     if not raw_ingredients_text.strip():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Product has no ingredient information",
+        logger.warning(f"No ingredient information for {product_data['product_name']} (source: {product_data.get('source', 'unknown')})")
+        return ProductSafetyResponse(
+            product_name=product_data["product_name"],
+            brand=product_data.get("brand", "Unknown Brand"),
+            grade="N/A",
+            overall_score=0.0,
+            ingredient_count=0,
+            ingredients=[],
+            worst_ingredients=[],
+            profile_warnings=[],
+            recommendation=f"No ingredient information available for this product. Try adding ingredients manually on our Ingredient Checker page.",
+            scan_method="barcode",
         )
 
     # Normalize ingredients
     normalized_ingredients = normalise_ingredient_list(raw_ingredients_text)
     if not normalized_ingredients:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Could not extract ingredients from product data",
+        logger.warning(f"Could not extract ingredients from {product_data['product_name']}")
+        return ProductSafetyResponse(
+            product_name=product_data["product_name"],
+            brand=product_data.get("brand", "Unknown Brand"),
+            grade="N/A",
+            overall_score=0.0,
+            ingredient_count=0,
+            ingredients=[],
+            worst_ingredients=[],
+            profile_warnings=[],
+            recommendation=f"Could not parse ingredient information for this product. Try adding ingredients manually on our Ingredient Checker page.",
+            scan_method="barcode",
         )
 
     # Encode ingredients
@@ -438,6 +524,92 @@ async def scan_image(request: Request, payload: ImageRequest) -> ProductSafetyRe
     )
 
 
+@app.post(
+    "/scan/manual",
+    response_model=ProductSafetyResponse,
+    status_code=200,
+    tags=["Scanning"],
+    summary="Analyze Product from Manual Ingredient List",
+)
+@limiter.limit("100/minute")
+async def scan_manual(request: Request, payload: ManualIngredientRequest) -> ProductSafetyResponse:
+    """
+    Analyze product safety from manually entered ingredient list.
+    
+    This endpoint allows users to paste or type ingredient lists directly,
+    making the system work for ANY product regardless of barcode availability.
+
+    Args:
+        payload: Request with ingredient text and optional health profiles
+
+    Returns:
+        Detailed product safety assessment
+
+    Raises:
+        400: Invalid ingredient list
+        503: Model not loaded
+    """
+    if not app_state.models_loaded:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Models not loaded. Please try again later.",
+        )
+
+    # Normalize ingredients from text
+    raw_ingredients_text = payload.ingredients_text.strip()
+    
+    if not raw_ingredients_text:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ingredients text cannot be empty",
+        )
+
+    logger.info(f"Manual analysis for product: {payload.product_name}")
+    
+    normalized_ingredients = normalise_ingredient_list(raw_ingredients_text)
+    
+    if not normalized_ingredients:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Could not extract any valid ingredients from text",
+        )
+
+    logger.info(f"Normalized {len(normalized_ingredients)} ingredients")
+
+    # Encode ingredients
+    ingredient_features_df = app_state.encoder.encode_ingredient_list(normalized_ingredients)
+    ingredient_features = {
+        row["ingredient_name"]: row.to_dict()
+        for _, row in ingredient_features_df.iterrows()
+    }
+
+    # Score product
+    product_grade = app_state.scorer.score_product(
+        product_name=payload.product_name or "Custom Product",
+        brand=payload.brand or "Unknown Brand",
+        ingredients=normalized_ingredients,
+        ingredient_features=ingredient_features,
+        profiles=payload.user_profiles,
+        scan_method="manual",
+    )
+
+    logger.info(f"Manual product scored: {product_grade.grade}")
+
+    # Convert to response model format
+    return ProductSafetyResponse(
+        product_name=product_grade.product_name,
+        brand=product_grade.brand,
+        grade=product_grade.grade,
+        overall_score=product_grade.overall_score,
+        ingredient_count=product_grade.ingredient_count,
+        ingredients=product_grade.ingredients,
+        worst_ingredients=product_grade.worst_ingredients,
+        profile_warnings=product_grade.profile_warnings,
+        recommendation=product_grade.recommendation,
+        scan_method=product_grade.scan_method,
+    )
+
+
 # ============================================================================
 # INGREDIENT LOOKUP ENDPOINT
 # ============================================================================
@@ -478,7 +650,7 @@ async def get_ingredient_safety(ingredient_name: str) -> dict:
     return {
         "ingredient_name": normalized,
         "ewg_score": features["ewg_score"],
-        "hazard_level": features["hazard_level"],
+        "safety_label": features["safety_label"],
         "chemical_family": features["chemical_family"],
         "allergen": features["allergen"],
         "comedogenic_rating": features["comedogenic_rating"],
@@ -491,6 +663,63 @@ async def get_ingredient_safety(ingredient_name: str) -> dict:
 # ============================================================================
 # REFERENCE DATA ENDPOINTS
 # ============================================================================
+
+
+@app.post(
+    "/ingredients/batch",
+    tags=["Lookup"],
+    summary="Get Safety Info for Multiple Ingredients (Batch)",
+)
+async def get_ingredients_batch(ingredient_names: list[str]) -> dict:
+    """
+    Get safety information for multiple ingredients in one request.
+    
+    This endpoint reduces N+1 API calls by allowing batch lookups.
+    
+    Args:
+        ingredient_names: List of ingredient names to look up
+    
+    Returns:
+        Dict with results for each ingredient
+    """
+    if not app_state.models_loaded:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Models not loaded",
+        )
+    
+    results = []
+    errors = []
+    
+    for name in ingredient_names:
+        try:
+            normalized = normalise_ingredient_list(name)[0] if name else ""
+            if not normalized:
+                errors.append({"ingredient": name, "error": "Invalid ingredient name"})
+                continue
+            
+            features = app_state.encoder.encode_ingredient(normalized)
+            results.append({
+                "ingredient_name": normalized,
+                "ewg_score": features["ewg_score"],
+                "safety_label": features["safety_label"],
+                "chemical_family": features["chemical_family"],
+                "allergen": features["allergen"],
+                "comedogenic_rating": features["comedogenic_rating"],
+                "endocrine_disruptor": features["endocrine_disruptor"],
+                "pregnancy_safe": features["pregnancy_safe"],
+                "vegan": features["vegan"],
+            })
+        except Exception as e:
+            logger.warning(f"Error processing ingredient {name}: {e}")
+            errors.append({"ingredient": name, "error": str(e)})
+    
+    return {
+        "results": results,
+        "errors": errors,
+        "total_requested": len(ingredient_names),
+        "total_processed": len(results),
+    }
 
 
 @app.get(

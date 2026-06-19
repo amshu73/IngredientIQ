@@ -9,95 +9,247 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-# Default INCI synonym mappings (in-memory fallback)
+# Default INCI synonym mappings (in-memory fallback) - EXPANDED
 DEFAULT_INCI_MAPPING = {
+    # Water and solvents
     "aqua": "water",
     "water": "water",
     "h2o": "water",
+    "eau": "water",
     "alcohol": "alcohol",
     "ethanol": "alcohol",
+    "ethyl alcohol": "alcohol",
+    "sd alcohol": "alcohol",
+    "denat. alcohol": "alcohol",
+    
+    # Alcohols (fatty)
     "cetyl alcohol": "cetyl alcohol",
     "stearyl alcohol": "stearyl alcohol",
     "cetearyl alcohol": "cetearyl alcohol",
+    "cetostearyl alcohol": "cetearyl alcohol",
+    "behenyl alcohol": "behenyl alcohol",
+    
+    # Glycerin and glycols
     "glycerin": "glycerin",
     "glycerol": "glycerin",
+    "glycerine": "glycerin",
     "propylene glycol": "propylene glycol",
     "butylene glycol": "butylene glycol",
+    "caprylyl glycol": "caprylyl glycol",
+    "pentylene glycol": "pentylene glycol",
+    
+    # Gums and thickeners
     "xanthan gum": "xanthan gum",
+    "guar gum": "guar gum",
+    "locust bean gum": "locust bean gum",
+    "carbomer": "carbomer",
+    "hydroxyethylcellulose": "hydroxyethylcellulose",
+    "cellulose": "cellulose",
+    "carrageenan": "carrageenan",
+    
+    # Acids
     "citric acid": "citric acid",
     "sodium citrate": "sodium citrate",
+    "lactic acid": "lactic acid",
+    "glycolic acid": "glycolic acid",
+    "salicylic acid": "salicylic acid",
+    "hyaluronic acid": "hyaluronic acid",
+    "sodium hyaluronate": "hyaluronic acid",
+    "ascorbic acid": "ascorbic acid",
+    "vitamin c": "ascorbic acid",
+    "l-ascorbic acid": "ascorbic acid",
+    
+    # Bases
     "sodium hydroxide": "sodium hydroxide",
     "potassium hydroxide": "potassium hydroxide",
+    "triethanolamine": "triethanolamine",
+    "tea": "triethanolamine",
+    "aminomethyl propanol": "aminomethyl propanol",
+    
+    # Salts
     "sodium chloride": "sodium chloride",
     "salt": "sodium chloride",
+    "sea salt": "sodium chloride",
+    "magnesium sulfate": "magnesium sulfate",
+    "epsom salt": "magnesium sulfate",
+    
+    # Fragrance
     "fragrance": "fragrance",
     "parfum": "fragrance",
+    "perfume": "fragrance",
     "essential oil": "fragrance",
+    "aroma": "fragrance",
+    
+    # Parabens
     "methylparaben": "methylparaben",
     "ethylparaben": "ethylparaben",
     "propylparaben": "propylparaben",
     "butylparaben": "butylparaben",
     "parabens": "methylparaben",
+    
+    # Other preservatives
     "phenoxyethanol": "phenoxyethanol",
+    "sodium benzoate": "sodium benzoate",
+    "potassium sorbate": "potassium sorbate",
+    "benzyl alcohol": "benzyl alcohol",
+    "methylisothiazolinone": "methylisothiazolinone",
+    "methylchloroisothiazolinone": "methylchloroisothiazolinone",
+    
+    # EDTA
     "edta": "edta",
     "disodium edta": "edta",
     "tetrasodium edta": "edta",
+    "edetate disodium": "edta",
+    
+    # Minerals and pigments
     "titanium dioxide": "titanium dioxide",
     "ci 77891": "titanium dioxide",
+    "zinc oxide": "zinc oxide",
+    "ci 77947": "zinc oxide",
     "iron oxides": "iron oxides",
     "ci 77492": "iron oxide yellow",
     "ci 77491": "iron oxide red",
     "ci 77499": "iron oxide black",
     "mica": "mica",
+    "ci 77019": "mica",
     "talc": "talc",
     "kaolin": "kaolin",
-    "zinc oxide": "zinc oxide",
-    "colloidal silver": "colloidal silver",
-    "nanoparticles": "nanoparticles",
+    "china clay": "kaolin",
+    "bentonite": "bentonite",
+    
+    # UV filters
     "oxybenzone": "oxybenzone",
+    "benzophenone-3": "oxybenzone",
     "avobenzone": "avobenzone",
+    "butyl methoxydibenzoylmethane": "avobenzone",
     "octinoxate": "octinoxate",
+    "ethylhexyl methoxycinnamate": "octinoxate",
+    "octocrylene": "octocrylene",
+    "homosalate": "homosalate",
+    "octisalate": "octisalate",
+    
+    # Retinoids
     "retinol": "retinol",
+    "vitamin a": "retinol",
     "retinyl palmitate": "retinol derivative",
     "retinaldehyde": "retinol derivative",
-    "sodium benzoate": "sodium benzoate",
-    "potassium sorbate": "potassium sorbate",
-    "calcium pantothenate": "panthenol",
+    "retinoic acid": "retinoic acid",
+    "tretinoin": "retinoic acid",
+    
+    # Vitamins
     "panthenol": "panthenol",
+    "pro-vitamin b5": "panthenol",
+    "d-panthenol": "panthenol",
+    "calcium pantothenate": "panthenol",
     "niacinamide": "niacinamide",
+    "nicotinamide": "niacinamide",
+    "vitamin b3": "niacinamide",
     "vitamin e": "tocopherol",
     "tocopherol": "tocopherol",
     "tocopheryl acetate": "tocopherol",
-    "vitamin c": "ascorbic acid",
-    "ascorbic acid": "ascorbic acid",
-    "hyaluronic acid": "hyaluronic acid",
-    "salicylic acid": "salicylic acid",
-    "glycolic acid": "glycolic acid",
-    "lactic acid": "lactic acid",
-    "azelaic acid": "azelaic acid",
-    "kojic acid": "kojic acid",
+    "dl-alpha tocopherol": "tocopherol",
+    "biotin": "biotin",
+    "vitamin b7": "biotin",
+    
+    # Oils and butters
+    "jojoba oil": "jojoba oil",
+    "simmondsia chinensis": "jojoba oil",
+    "argan oil": "argan oil",
+    "argania spinosa": "argan oil",
+    "coconut oil": "coconut oil",
+    "cocos nucifera": "coconut oil",
+    "almond oil": "almond oil",
+    "prunus amygdalus dulcis": "almond oil",
+    "rosehip oil": "rosehip oil",
+    "rosa canina": "rosehip oil",
+    "shea butter": "shea butter",
+    "butyrospermum parkii": "shea butter",
+    "cocoa butter": "cocoa butter",
+    "theobroma cacao": "cocoa butter",
+    "olive oil": "olive oil",
+    "olea europaea": "olive oil",
+    "sunflower oil": "sunflower oil",
+    "helianthus annuus": "sunflower oil",
+    
+    # Silicones
+    "dimethicone": "dimethicone",
+    "cyclomethicone": "cyclomethicone",
+    "cyclopentasiloxane": "cyclopentasiloxane",
+    "dimethiconol": "dimethiconol",
+    "phenyl trimethicone": "phenyl trimethicone",
+    
+    # Emollients
+    "squalane": "squalane",
+    "squalene": "squalene",
+    "caprylic/capric triglyceride": "caprylic triglyceride",
+    "coco-caprylate": "coco-caprylate",
+    "isopropyl myristate": "isopropyl myristate",
+    "isopropyl palmitate": "isopropyl palmitate",
+    
+    # Surfactants
+    "sodium lauryl sulfate": "sodium lauryl sulfate",
+    "sls": "sodium lauryl sulfate",
+    "sodium laureth sulfate": "sodium laureth sulfate",
+    "sles": "sodium laureth sulfate",
+    "cocamidopropyl betaine": "cocamidopropyl betaine",
+    "coco-glucoside": "coco-glucoside",
+    "decyl glucoside": "decyl glucoside",
+    "sodium cocoyl isethionate": "sodium cocoyl isethionate",
+    
+    # Actives
     "alpha hydroxy acid": "hydroxy acid",
     "aha": "hydroxy acid",
     "bha": "salicylic acid",
     "beta hydroxy acid": "salicylic acid",
-    "cetyl acetate": "cetyl acetate",
-    "dimethicone": "dimethicone",
-    "cyclomethicone": "cyclomethicone",
-    "squalane": "squalane",
-    "squalene": "squalene",
-    "jojoba oil": "jojoba oil",
-    "argan oil": "argan oil",
-    "coconut oil": "coconut oil",
-    "almond oil": "almond oil",
-    "rosehip oil": "rosehip oil",
-    "vitamin a": "retinol",
-    "sodium sulfate": "sodium sulfate",
-    "magnesium sulfate": "magnesium sulfate",
-    "zinc pyrithione": "zinc pyrithione",
+    "azelaic acid": "azelaic acid",
+    "kojic acid": "kojic acid",
+    "tranexamic acid": "tranexamic acid",
+    "mandelic acid": "mandelic acid",
+    
+    # Plant extracts
+    "aloe vera": "aloe vera",
+    "aloe barbadensis": "aloe vera",
+    "green tea extract": "green tea extract",
+    "camellia sinensis": "green tea extract",
+    "chamomile": "chamomile",
+    "chamomilla recutita": "chamomile",
+    "calendula": "calendula",
+    "calendula officinalis": "calendula",
+    
+    # Peptides and proteins
+    "peptide": "peptide",
+    "palmitoyl pentapeptide": "peptide",
+    "acetyl hexapeptide": "peptide",
+    "collagen": "collagen",
+    "hydrolyzed collagen": "collagen",
+    "keratin": "keratin",
+    "hydrolyzed keratin": "keratin",
+    
+    # Others
+    "ceramide": "ceramide",
+    "niacinamide": "niacinamide",
+    "allantoin": "allantoin",
+    "bisabolol": "bisabolol",
+    "caffeine": "caffeine",
+    "urea": "urea",
+    "sodium pca": "sodium pca",
+    "petrolatum": "petrolatum",
+    "petroleum jelly": "petrolatum",
+    "vaseline": "petrolatum",
+    "mineral oil": "mineral oil",
+    "paraffinum liquidum": "mineral oil",
+    
+    # Problematic
     "coal tar": "coal tar",
-    "salicylic acid": "salicylic acid",
     "sulfur": "sulfur",
     "benzoyl peroxide": "benzoyl peroxide",
+    "zinc pyrithione": "zinc pyrithione",
+    "triclosan": "triclosan",
+    "triclocarban": "triclocarban",
+    "formaldehyde": "formaldehyde",
+    "dmdm hydantoin": "dmdm hydantoin",
+    "quaternium-15": "quaternium-15",
+    "hydroquinone": "hydroquinone",
 }
 
 

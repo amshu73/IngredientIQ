@@ -61,30 +61,36 @@ export const scanImage = (base64, profiles = []) =>
     })
   );
 
+export const getIngredientsBatch = (ingredientNames) =>
+  handleResponse(client.post('/ingredients/batch', ingredientNames));
+
 export const analyzeIngredients = async (ingredientList, profiles = []) => {
   const ingredients = ingredientList
     .split(',')
     .map((ing) => ing.trim())
     .filter((ing) => ing.length > 0);
 
-  const results = [];
+  // Use batch endpoint to avoid N+1 API calls
+  const batchResult = await getIngredientsBatch(ingredients);
+  
+  if (batchResult.error || !batchResult.data) {
+    return {
+      data: null,
+      status: batchResult.status,
+      error: batchResult.error || 'Failed to analyze ingredients',
+    };
+  }
+
+  const results = batchResult.data.results || [];
   let safeCount = 0;
   let moderateCount = 0;
   let hazardousCount = 0;
 
-  for (const ingredient of ingredients) {
-    const result = await getIngredient(ingredient);
-    if (result.data) {
-      results.push({
-        ...result.data,
-        original_input: ingredient,
-      });
-
-      const hazardLevel = result.data.hazard_level;
-      if (hazardLevel === 'SAFE') safeCount++;
-      else if (hazardLevel === 'MODERATE') moderateCount++;
-      else if (hazardLevel === 'HAZARDOUS') hazardousCount++;
-    }
+  for (const ingredient of results) {
+    const safetyLabel = ingredient.safety_label;
+    if (safetyLabel === 'SAFE') safeCount++;
+    else if (safetyLabel === 'MODERATE') moderateCount++;
+    else if (safetyLabel === 'HAZARDOUS') hazardousCount++;
   }
 
   return {

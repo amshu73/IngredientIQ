@@ -35,27 +35,25 @@ function IngredientChecker() {
       .map((ing) => ing.trim())
       .filter((ing) => ing.length > 0);
 
-    const allResults = [];
-    const warnings = [];
+    // Single batch call instead of N+1 individual calls
+    setProgress(50);
+    const response = await analyzeIngredients(ingredientText, selectedProfiles);
+
+    if (response.error || !response.data) {
+      setError(response.error || 'Failed to analyze ingredients');
+      setLoading(false);
+      return;
+    }
+
+    const allResults = response.data.ingredients || [];
+    const warnings = response.data.warnings || [];
     let totalScore = 0;
     let hazardousCounts = { SAFE: 0, MODERATE: 0, HAZARDOUS: 0 };
 
-    for (let i = 0; i < ingredients.length; i++) {
-      setProgress(Math.round((i / ingredients.length) * 100));
-
-      const response = await analyzeIngredients([ingredients[i]], selectedProfiles);
-
-      if (!response.error && response.data) {
-        const ingResult = response.data.ingredients?.[0];
-        if (ingResult) {
-          allResults.push(ingResult);
-          totalScore += ingResult.ewg_score || 0;
-          hazardousCounts[ingResult.safety_level] = (hazardousCounts[ingResult.safety_level] || 0) + 1;
-        }
-        if (response.data.warnings) {
-          warnings.push(...response.data.warnings);
-        }
-      }
+    for (const ingredient of allResults) {
+      totalScore += ingredient.ewg_score || 0;
+      const safetyLabel = ingredient.safety_label;
+      hazardousCounts[safetyLabel] = (hazardousCounts[safetyLabel] || 0) + 1;
     }
 
     setProgress(100);
@@ -65,7 +63,6 @@ function IngredientChecker() {
     const averageScore = allResults.length > 0 ? totalScore / allResults.length : 0;
     let grade = 'A';
     if (hazardousCounts.HAZARDOUS > 0) grade = 'F';
-    else if (hazardousCounts.HAZARDOUS > 0 || averageScore > 8) grade = 'D';
     else if (hazardousCounts.MODERATE > allResults.length * 0.5) grade = 'C';
     else if (hazardousCounts.MODERATE > 0) grade = 'B';
 
